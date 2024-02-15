@@ -1,0 +1,2671 @@
+---
+title: "Introduction au langage R"
+subtitle: "Pour la manipulation, l'analyse et la représentation de données géographiques"
+img: img/USSEIN.png
+# date: 
+author: Hugues Pecout (CNRS, UMR Géographie-Cités)
+institute: "Master Géomatique, Université du Sine Saloum El-Hâdj Ibrahima NIASS, février 2024"
+lang: fr
+editor: source
+format:
+  revealjs: 
+    include-in-header:
+      - text: |
+          <script src = "https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js""></script>
+          <script type="text/javascript">
+            $(document).ready(function() {
+              $('body').prepend('<div class=\"zoomDiv\"><img src=\"\" class=\"zoomImg\"></div>');
+              // onClick function for all plots (img's)
+              $('img:not(.zoomImg)').click(function() {
+                $('.zoomImg').attr('src', $(this).attr('src')).css({width: '100%'});
+                $('.zoomDiv').css({opacity: '1', width: 'auto', border: '1px solid white', borderRadius: '5px', position: 'fixed', top: '50%', left: '50%', marginRight: '-50%', transform: 'translate(-50%, -50%)', boxShadow: '0px 0px 50px #888888', zIndex: '50', overflow: 'auto', maxHeight: '100%'});
+              });
+              // onClick function for zoomImg
+              $('img.zoomImg').click(function() {
+                $('.zoomDiv').css({opacity: '0', width: '0%'}); 
+              });
+            });
+          </script>
+    template-partials:
+      - title-slide.html
+    theme: [dark, styles.scss]
+    logo: img/logo_hp.png
+    footer: "Introduction au langage R - Université du Sine Saloum El-Hâdj Ibrahima NIASS, 2024"
+    scrollable: TRUE
+    smaller: TRUE
+    overview: TRUE
+    chalkboard: TRUE
+    transition: fade
+    transition-speed: fast
+    highlight-style: breeze
+    menu: TRUE
+    css: style.css
+    pointer:
+      pointerSize: 20
+      color: 'red4'
+---
+
+
+## Sommaire
+
+
+:::columns
+
+:::{.column .quatrevingtdix width="50%"}
+
+[**A. Pourquoi utiliser R ?**]{.colour .bigbis}
+
+- Logiciels vs langages
+- Langages vs langages
+- Présentation de R et Rstudio
+- Installation
+
+:::
+
+
+:::{.column .quatrevingtdix width="50%"}
+
+[**B. Introduction au langage**]{.colour .bigbis}
+
+- Les bases du langage R
+- R-base et packages
+- Quelques packages pour la geomatique
+- Aide et documentation
+
+:::
+
+:::
+
+
+
+
+:::columns
+
+:::{.column .quatrevingtdix width="15%"}
+
+:::
+
+:::{.column .soixantedix width="60%"}
+
+:::{.center .bigbis}
+
+[**C. Géomatique avec R**]{.colour .bigbis}
+
+:::
+
+- **Supports de cours (2) **: [Géomatique avec R](https://rcarto.github.io/geomatique_avec_r/){target="_blank"} & [Cartographie avec R](https://rcarto.github.io/cartographie_avec_r/){target="_blank"}     
+- *Exercice 1* : [Cartographie avec mapsf](https://github.com/HuguesPecout/GeoExo_Carto_R){target="_blank"}    
+- *Exercice 2* : [Manipulation de données vectorielles](https://github.com/HuguesPecout/GeoExo_sf_R){target="_blank"}      
+- *Exercice 3* : [R, OpenStreetMap et OSRM](https://github.com/HuguesPecout/GeoExo_osm_R){target="_blank"}    
+
+:::
+
+:::{.column .quatrevingtdix width="25%"}
+
+:::
+
+
+:::
+
+
+# [Logiciels vs langages]{.new_h2}
+
+## SAS, SPAD, SPSS... et R !
+
+\
+
+::: {.center}
+Il existe de nombreux logiciels d'analyse statistique. **Mais depuis le début des années 2000, le langage R gagne en importance dans ce domaine et s'impose progressivement comme une référence**, au même titre que les trois principaux logiciels d'analyse de données qui dominent le marché.
+
+
+:::
+
+\
+
+::: center
+![](img/R.png){fig-align="center" width="20%"}
+:::
+
+\
+
+::: {.center .bigbis}
+Plusieurs aspects peuvent nous laisser penser que de nombreux utilisateurs de logiciels statistiques devraient progressivement converger vers R...
+:::
+
+## Limites des logiciels propriétaires
+
+\
+
+::: columns
+::: {.column width="70%"}
+::: ul1
+-   Des **prix des licences** parfois onéreux\
+-   Des **problèmes d'intéropérabilité** avec les différents OS
+-   Un **développement contrôlé** qui induit des limites
+-   Des **spécificités et une polyvalence limité**\
+:::
+:::
+
+::: {.column .fragment width="30%"}
+::: {.center .big}
+Prix licence SPSS *Base edition*
+:::
+
+![](img/spss.png){fig-align="center" width="60%"}
+:::
+:::
+
+\
+
+::: {.table .fragment}
+::: center
+[**Intéropérabilité des principaux logiciels :**]{.bigbis}
+
+```{r }
+#| results: asis
+
+
+Logiciel <- c("SAS","SPAD","SPSS","Stata")
+Windows <- c("oui","oui","oui","oui")
+macOS <- c("terminé","non","oui","oui")
+Linux <- c("oui","non","non","oui")
+BSD <- c("non","non","non","non")
+Otros_Unix <- c("oui","non","non","non")
+
+tab <- data.frame(Logiciel, Windows, macOS, Linux, BSD, Otros_Unix)
+
+colnames(tab) <- c(" Logiciel/Système"," Windows", " MacOS", " Linux", " BSD", " Autres Unix")
+
+knitr::kable(tab)  
+```
+:::
+:::
+
+::: notes
+**SPSS** : orienté vers les sciences sociales **SPAD** : orienté vers la prise de décision **Stata** : orienté pour les économistes et épidémilogistes **SAS** : assez complet, limité dans certains domaines (ex: graphique)
+
+Ils offrent **peu ou pas** d'**analyse de réseau**, d'**analyse de séquence**, de **léxicométrie** (sauf SPAD)... Et très peu de fonctionnalités de valorisation.
+
+-   **Durabilité**
+-   **Liberté d'utilisation**
+-   **Compatibilité** avec d'autres logiciels (format des données)
+-   **Mise à jour** et compatibilité entre versions
+-   **Développement** de nouvelles fonctionnalités
+-   **Langues** disponibles (logiciel et aide)
+-   **Ressources d'information** disponibles
+:::
+
+## Autant d'obstacles pour :
+
+\
+\
+
+::: columns
+::: {.column width="50%"}
+::: ul2
+-   L'**utilisation**
+-   Le **travail collaboratif**
+-   Le **travail interdisciplinaire**
+-   La **reproductibilité**
+-   La **formation**...\
+:::
+:::
+
+::: {.column width="50%"}
+![](img/work.jpeg){fig-align="center" width="90%"}
+:::
+:::
+
+
+
+\
+
+::: {.center .bigquat .fragment .colour}
+**C'est pour cela que l'on préfère R !**
+:::
+
+
+# {data-background="img/RvsPython.png" data-background-size="50%"}
+
+
+##  Frères ennemis
+
+\
+
+:::{.bigbis}
+**Deux langages** très utilisés pour le traitement et l'analyse des données en SHS.  
+**Très souvent comparés pour leurs fonctionnalités semblables**...
+:::
+
+\
+
+:::{.center}
+![](img/Tweet_1.PNG){width="70%"}
+:::
+
+\
+
+:::{.bigquat .center}
+L'utilisation de **R** ou de **Python** dépend surtout de :         
+[**Qui suis-je ? Qu'est-ce que je veux faire ?**]{.colour}
+:::
+
+##  Deux communautés différentes
+
+\
+
+::: columns
+
+::: {.column width="50%"}
+
+
+:::{.center}
+![](img/R.png){width="30%"}
+:::
+
+:::{.center}
+![](img/Tweet_2.PNG){width="70%"}
+:::
+
+:::{.center .fragment}
+- **Documentation** riche et **structurée**
+- Communauté **accessible** et **inclusive**
+- Discipline : **analyse de données**
+- Métiers : **recherche & développement**
+:::
+
+:::
+
+
+::: {.column width="50%"}
+
+:::{.center}
+![](img/Python.png){width="23%"}
+:::
+
+:::{.center}
+![](img/Tweet_3.PNG){width="55%"}
+:::
+
+
+
+:::{.center .fragment}
+- Plus d'utilisateur·rices
+- Communauté plus **spécialisé** en informatique
+- Discipline : **science des données**
+- Métiers : **informaticien**, **développeur**...
+:::
+
+:::
+
+:::
+
+
+
+
+##  Différents points forts
+   
+\  
+
+::: columns
+
+::: {.column width="50%"}
+
+::: {.center .bigbis}
+**R** a autant de cerveau...
+:::
+
+::: {.center}
+![](img/batman.png){width="50%"}
+:::
+
+
+::: {.quatrevingtdix .center .fragment}
+- Plus **facile à prendre en main** (Rstudio)
+- **Analyse statistique**
+- **Représentation graphique**
+- **Literate programming ** (production de document)
+:::
+
+\
+
+::: {.colour .center .fragment}
+&rarr; Spécialisé dans l'**analyse statistique**    
+&rarr; Pour **utilisateu·rices moins avancés** en progr.      
+
+:::
+
+:::
+
+
+::: {.column width="50%"}
+
+:::{.center .bigbis}
+...que **Python** a du muscle !
+:::
+
+::: {.center}
+![](img/superman.png){width="38%"}
+:::
+
+
+::: {.quatrevingtdix .center .fragment}
+- Plus **puissant et généraliste**
+- Gestion de **données volumineuses**
+- **Web scraping** et **TAL**
+- **Développement de logiciel**
+:::
+
+\
+
+::: {.colour .center .fragment}
+&rarr; Spécialisé dans la **science de données**     
+&rarr; Pour **utilisateu·rices avancés** en progr.    
+
+:::
+
+:::
+
+:::
+
+## Et le langage <img src="img/julia.png" width="100" style="margin-top:0px;margin-bottom:-15px;"/> ?
+
+
+\
+
+::: {.bigbis}
+En 2008, au MIT, quelques chercheurs se rassemblent et font un point sur les outils disponibles pour le calcul scientifique et statistique. Principal constat, la communauté était éclatée : 
+
+- des développeurs utilisateurs de C ou de python, 
+- des statisticiens utilisateurs de R, 
+- et des utilisateurs de solutions commerciales ayant leur propre langage (SAS, Matlab...)
+
+
+
+**il fallait un langage prenant tous les avantages de chaque langage et rajoutant un aspect de plus en plus pointé du doigt : la parallélisation massive (rapidité de calcul)... Voici comment la langage Julia est né !**
+
+
+:::
+
+\
+
+[Bien que la communauté d'utilisateur.rices se soit depuis agrandie, **le langage Julia ne s'est toujours pas imposé dans la communauté SHS, où R et Python semble toujours les langages les plus utilisés pour l'analyse de données**]{.bigbis .colour}
+
+
+#  {data-background="img/R.png" data-background-size="25%"}
+
+## Un peu d'histoire
+
+\
+
+::: {.bigbis}
+**R se base sur le langage de programmation S**, créé en 1988.  
+L'objectif était de **créer le meilleur environnement d'analyse statistique**.
+:::
+
+
+::: {.soixantequinze}
+- **1992**: **R. Gentleman** et **R. Ihaka démarrent le développement** (projet de recherche)
+- 1993: **Première version binaire** de R publiée sur Statlib
+- **1995**: **R est distribué en tant que logiciel open source, sous licence GPL2**
+- 1997: Création du *R core group*. Création du CRAN (par K. Jornik et F. Leisch)
+- 1999: Création du site web de R (*r-project.org*) . Première réunion physique de la *R core team* 
+- **2000**: **R 1.0.0** est publié. John Chambers (créateur du langage S), rejoint la *R Core team* 
+- 2001: Création de *R News* (qui deviendra *R Journal*)
+- **2003**: **Création de la** ***R Foundation***
+- 2004: Première conférence *UseR!* (Vienne)
+- **2004**: **R 2.0.0** est publié
+- 2009: Première édition du *R Journal*
+- **2013**: **R 3.0.0** est plublié
+- **2015**: **Création du** ***R Consortium*** (avec la participation de la *R Foundation*)
+- **2020**: **R 4.0.0** est plublié    
+:::
+
+
+
+::: {.soixantecinq}
+*source : [https://blog.revolutionanalytics.com/2017/10/updated-history-of-r.html](https://blog.revolutionanalytics.com/2017/10/updated-history-of-r.html){target="_blank"}*
+:::
+
+
+## Soutiens financiers importants
+
+
+\
+
+::: {.bigbis}
+**R est le résultat de 30 années de recherche & développement. Aujourd'hui, plusieurs acteurs économiques importants** **financent le développement de R** : ***Microsoft***, ***Google***, ***Oracle***, ***Esri***... 
+:::
+
+
+::: {.center}
+![](img/members_R.png){width="65%"}
+:::
+
+::: {.soixantecinq .center}
+*source : [https://www.r-consortium.org/members](https://www.r-consortium.org/members){target="_blank"}*
+:::
+
+
+
+
+## Libre et multi-plateforme
+
+<aside class="notes">
+Il fait partie du mouvement du logiciel libre (lancé par Richard Stallman en 1985), qui est un mouvement politique et social dont l'objectif est d'offrir des logiciels libres de secrets commerciaux  (un code source libre).
+</aside>
+
+\
+\
+
+:::columns
+
+:::{.column width="70%"}
+
+::: {.bigquat}
+
+- **R est un logiciel/langage libre (open source)**  
+
+\
+
+- R fait partie de la liste des **paquets GNU GPLv3**
+
+\
+
+- **R est multi-plateforme**
+
+:::
+
+\
+
+
+:::
+
+:::{.column width="30%"}
+
+![](img/gpl.png){width="70%"}
+
+:::
+
+:::
+
+
+
+::: {.fragment}
+```{r}
+
+Software <- c("R")
+Windows <- c("oui")
+macOS <- c("oui")
+Linux <- c("oui")
+BSD <- c("oui")
+Otros_Unix <- c("oui")
+
+tab <- data.frame(Software, Windows, macOS, Linux, BSD, Otros_Unix)
+
+colnames(tab) <- c(" Logiciel/Sytsème"," Windows", " MacOS", " Linux", " BSD", " Autres Unix")
+
+knitr::kable( tab)
+```
+:::
+
+## Des fonctionnalités croissantes
+
+\
+
+```{r warning=FALSE, message=FALSE, eval=TRUE, include= TRUE, echo=FALSE}
+
+library('rvest')
+url <- "https://cran.r-project.org/web/packages/available_packages_by_date.html"
+#Reading the HTML code from the website
+webpage <- read_html(url)
+td <- webpage %>%  html_nodes("td")
+rank_data <- html_text(td)
+
+vec <- c(NULL)
+for (t in seq(1,length(rank_data),3))  {
+vec <-  c(vec, rank_data[t])
+}
+
+library(stringr)
+vec <- str_trim(vec)
+test <- as.data.frame(vec)
+test$nb <- 1
+test$date <- as.Date(test$vec)
+test <- test[,c(3:2)]
+
+library(plyr)
+test2 <-  ddply(test, .(date), summarize, nb=sum(nb))
+test2$cum <- cumsum(test2$nb)
+test <- test2[,c(1:3)]
+
+nb_function_base <- length(lsf.str("package:base"))
+
+# Nombre de fonctions primitives
+base <- length(lsf.str("package:base")) 
+stats <- length(lsf.str("package:stats")) 
+utils <- length(lsf.str("package:utils")) 
+methods <- length(lsf.str("package:methods")) 
+grDevices <- length(lsf.str("package:grDevices")) 
+graphics <- length(lsf.str("package:graphics")) 
+datasets <- length(lsf.str("package:datasets")) 
+
+Nb_prim <- base + utils + stats + methods + grDevices + graphics + datasets 
+
+library(grid)
+library(splines)
+library(stats4)
+library(tcltk)
+library(tools)
+grid <- length(lsf.str("package:grid")) 
+splines <- length(lsf.str("package:splines")) 
+stats4 <- length(lsf.str("package:stats4")) 
+tcltk <- length(lsf.str("package:tcltk")) 
+tools <- length(lsf.str("package:tools")) 
+
+Nb_prim_2 <- grid + splines + stats4 + tcltk + tools
+
+
+Nb_prim <- Nb_prim  + Nb_prim_2
+
+```
+
+
+::: {.bigbis}
+**R propose `r Nb_prim` fonctions** statistiques et graphiques **standard** (primitives)
+
+Sur ce socle commun peut s'ajouter de **nombreux packages**, mis à disposition sur le [***Comprehensive R Archive Network***](https://cran.r-project.org/web/packages/available_packages_by_name.html){target="_blank"} (**CRAN**). Ex :
+:::
+
+::: {.quatrevingtdix .center}
+- [***FactoMineR***]{.colour} - **analyse multivariée des données**
+- [***quanteda***]{.colour} - **analyse textuelle**
+- [***igraph***]{.colour} - **analyse de réseau**
+- [***sf***]{.colour} - **manipulation de données spatiales vectorielles**
+- [***terra***]{.colour} - **manipulation de données spatiales RASTER**
+- [***mapsf***]{.colour} - **Cartographie thématique**
+- [***shiny***]{.colour} - **applicacions web interactives**
+:::
+
+\
+
+::: {.bigbis .colour}
+**R a une structure modulaire qui offre toute une gamme d'applications possibles**. **Son expansion n'est limitée que par les contributions** !
+:::
+
+## Des fonctionnalités croissantes...
+
+\
+
+```{r warning=FALSE, message=FALSE, eval=TRUE, include= TRUE, echo=FALSE, fig.width = 10, fig.height=  4.8}
+
+library(ggplot2) 
+
+p <- ggplot(test2) + 
+geom_line(aes(date, cum), lwd = 1, col = '#eccb35') + 
+xlab("") + 
+ylab("") + 
+scale_x_date( date_minor_breaks = "1 month", date_labels = "%Y", breaks = as.Date( c('2005-01-01', 
+                                                                                     '2006-01-01', 
+                                                                                     '2007-01-01', 
+                                                                                     '2008-01-01', 
+                                                                                     '2009-01-01', 
+                                                                                     '2010-01-01', 
+                                                                                     '2011-01-01',
+                                                                                     '2012-01-01',
+                                                                                     '2013-01-01', 
+                                                                                     '2014-01-01', 
+                                                                                     '2015-01-01', 
+                                                                                     '2016-01-01', 
+                                                                                     '2017-01-01', 
+                                                                                     '2018-01-01', 
+                                                                                     '2019-01-01', 
+                                                                                     '2020-01-01', 
+                                                                                     '2021-01-01',
+                                                                                     '2022-01-01',
+                                                                                     
+'2023-01-01', '2024-01-01'))) + 
+annotate(geom = "text", x = as.Date('2018-08-23'), y = 15000, label = paste0( max(test2$cum), ' packages \n (', format(Sys.time(), '%d %b %Y'), ")"), color ="#ff5151", size = 5.5) + 
+geom_point(aes(x = max(date), y = max(cum)), color = "#ff5151", size = 4) + 
+theme(axis.text = element_text(size = 12, colour ="grey90"), 
+      panel.background = element_rect(fill = "transparent"), 
+      plot.background = element_rect(fill = "transparent", color = NA), 
+      panel.grid.major = element_line(colour = "grey40"), 
+      panel.grid.minor = element_line(colour = "grey25"), 
+      legend.background = element_rect(fill = "transparent"), 
+      legend.box.background = element_rect(fill = "transparent")) 
+
+ggsave(p, filename = "img/graph.png", bg = "transparent", dpi = 300) 
+
+```
+
+
+
+:::{.bigbis .center}
+**Nombre de packages disponibles sur le [CRAN](https://cran.r-project.org/){target="_blank"}**
+:::
+
+:::{.center}
+![](img/graph.png){width="100%"}
+:::
+
+
+## ... Pour un langage polyvalent
+
+::: {.bigone}
+Les **packages permettent d'opérer sur l'ensemble de la chaîne de traitement, de la collecte des données à la valorisation des résultats (diaporama, rapport statistique, site web...).**
+:::
+
+:::{.center}
+![](img/Chaine_traitement_R_white_FR.png){width="75%"}
+:::
+
+::: {.bigone .colour style="margin-top:20px;"}
+**Cette polyvalence** permet à R de **compléter** (et de **concurrencer**) toute une série de **logiciels existants**
+:::
+
+
+## R est-il fiable ?
+
+\
+
+::: {.bigquat}
+Peut-on avoir confiance en un langage Open Source ?
+:::
+
+\
+
+::: {.bigquat}
+- **Financement d'acteurs économiques** (*R Consortium*)
+- **Communauté impliquée** et **importante**
+-  Le fonctionnement d'un logiciel **open source est vérifiable**
+- **Tous les logiciels ont des failles, mais...**
+
+\
+       
+[**L'information circule vite dans les communautés des logiciels OS !**]{.colour}
+:::
+
+
+## Une grande communauté d'utilisateurs
+
+::: {.center} 
+![](img/meetup_group.PNG){width="90%"}
+
+
+::: {.soixantecinq}
+*source : [https://benubah.github.io/r-community-explorer/rugs.html](https://benubah.github.io/r-community-explorer/rugs.html){target="_blank"}*
+:::
+
+:::
+
+
+
+## Et d'entreprises
+
+::: {.center} 
+![](img/empreza.PNG){width="95%"}
+
+::: {.soixantecinq}
+*source : [https://data-flair.training/blogs/r-careers/](https://data-flair.training/blogs/r-careers/){target="_blank"}*
+:::
+
+:::
+
+
+
+
+## Polyvalence et reproductibilité
+
+\
+\
+
+::: {.bigquat}
+- **Un seul environnement** pour [**toutes les étapes de traitement**]{.colour}
+- **Un seul environnement** pour traiter les [**différents types de données**]{.colour}
+- **Un seul environnement** pour réaliser [**différents types d'analyses**]{.colour}
+- Mise en place de [**chaînes de traitement optimisées et uniques**]{.colour} 
+- Traitements et analyses [**facilement archivés et partagés**]{.colour}
+- Il suffit d'[**un ordinateur pour les reproduire....**]{.colour}
+:::
+
+\
+
+::: {.center .bigquat .fragment}
+**Seulement possible avec un langage Open Source spécialisé dans l'analyse statistique** 
+:::
+
+
+
+
+## Des points faibles ?
+
+\
+
+::: {.center .bigfive .colour .fragment}
+**OUI !**
+:::
+
+
+\
+
+
+::: {.center .bigquat}
+> - **R est un langage de programmation**
+> - **Son apprentissage est long, parfois douloureux...**
+> - **L'interface de base est très rudimentaire**   
+> - **La majorité des ressources sont en anglais**
+:::
+
+
+\
+
+::: {.center .bigfive .colour .fragment}
+**Mais ...**
+:::
+
+
+#  {data-background="img/Rstudio_logo.png" data-background-size="60%"}
+
+
+
+## Rstudio ? 
+
+\
+
+::: {.bigbis}
+**RStudio**, qui se nomme désormais [**Posit**](https://posit.co/){target="_blank"}, est une entreprise qui développe et publie des logiciels et des services basés sur le langage R.
+**C'est l'acteur privé le plus important de la communauté R**. **Rstudio est à l'origine de nombreux packages de référence**. *Ex :*
+:::
+
+
+:::{.center}
+- [**dplyr**](https://dplyr.tidyverse.org/){target="_blank"} & [**tidyr**](https://tidyr.tidyverse.org/){target="_blank"} (*manipulation de données*)
+- [**stringr**](https://stringr.tidyverse.org/articles/from-base.html){target="_blank"} (*manipulation de chaîne de caractères*)
+- [**ggplot2**](https://ggplot2.tidyverse.org/){target="_blank"} (*représentation graphique*)
+- [**rmarkdown**](https://rmarkdown.rstudio.com/){target="_blank"} (*literate programming*)
+- [**shiny**](https://shiny.rstudio.com/){target="_blank"} (*application web*)
+- ...
+:::
+
+::: {.bigbis}
+La majorité des packages de Rstudio sont regroupés dans un package "parapluie" : [**tidyverse**](https://www.tidyverse.org/){target="_blank"}
+:::
+
+    
+::: {.bigquat .colour .center style="margin-top:25px;"}
+**Posit propose également un Environnement de Développement Intégré qui facilite énormément la pratique du langage R : l'IDE Rstudio**
+:::
+
+
+## L'interface de R
+
+::: columns
+
+::: {.column width="50%"}
+
+![](img/R_wind.PNG){width="90%"}
+
+::: {.center}
+*Interface de R sur Windows*
+:::
+
+:::
+
+::: {.column width="50%"}
+
+![](img/R_linux.PNG){width="90%"}
+
+::: {.center}
+*Pas d'interface sur Linux (terminal)*
+:::
+
+\
+\
+
+:::{.center .colour .bigbis}
+**L'IDE Rstudio facilite l'apprentissage de R et son utilisation**
+:::
+
+:::
+
+:::
+
+## IDE Rstudio
+
+![](img/Rstudio_FR.png){width="80%"}
+
+
+## IDE Rstudio
+
+![](img/Rstudio.PNG){width="80%"}
+
+## l'IDE Rstudio, c'est aussi :
+
+\
+
+:::{.bigquat .center}
+- La **création de projet**
+- Des **fonctionnalités clic-bouton**
+- Un système d'**Auto-complétion**
+- De nombreux **raccourcis clavier**
+- Certains **packages pré-installés**
+- Le **système de publication** ***Quarto*** **intégré**
+- ...
+:::
+
+:::{.bigbis .center}
+Parce que c'est **simple, complet, en constante évolution et développé par le principale acteur de la communauté** : [**utilisez l'IDE RStudio!**]{.colour}
+::: 
+
+
+# [Installation]{.new_h2}
+
+
+## Installer R
+
+\
+
+:::{.bigbis .center}
+L'installation de R et de l'IDE Rstudio se fait comme n'importe quel autre logiciel.\
+**Connectez-vous au [CRAN](https://cran.r-project.org/){target="_blank"} pour télécharger R.**
+:::
+
+\
+
+![](img/Download.PNG){width="80%}
+
+:::{.center .bigbis}
+[https://cran.r-project.org/](https://cran.r-project.org/){target="_blank"}
+:::
+
+
+## Installer l'IDE Rstudio
+
+:::{.bigbis .center}
+Téléchargez la **version 'Desktop'** sur le [site de Rstudio](https://rstudio.com/){target="_blank"}
+
+
+![](img/Download_Rstudio.png){width="70%"}
+
+:::
+
+:::{.center .bigbis}
+[https://rstudio.com/products/rstudio/download/](https://rstudio.com/products/rstudio/download/){target="_blank"}
+:::
+
+
+
+## C'est parti !
+
+:::{.center}
+![](img/programer.png){width="55%"}
+:::
+
+
+
+:::{.center .bigquat}
+**Lancez Rstudio** (pas R) pour commencer
+:::
+
+
+# [Les bases du langage R]{.new_h2}
+
+
+## Une super calculatrice
+
+\
+
+:::{.bigquat .center}
+Le langage R offre les mêmes fonctionnalités qu'une calculatrice.\
+:::
+
+\
+
+::: {style="font-size:100%;"}
+Nom |	[Opérateurs arithmétiques]{.colour} |	Exemple | Résultat
+:-:  | :-:  | :-: | :-:
+Addition |	**+** |	5 + 3 |	8
+Soustraction | 	**-** |	5 - 1 |	4
+Multiplication  |	* |	5*5 |	25
+Division |	**/** |	5/5 |	1
+Puissance |	**^** |	5^5 |	3125
+Modulo |	**%%** |	5 %% 5 |	0
+Quotient Décimal |	**%/%** |	5 %/% 5 |	1
+:::
+
+
+\
+
+
+:::{.bigbis .center}
+Exemples appliqués :
+:::
+
+```{r eval=TRUE, echo=TRUE, include =TRUE }
+#| classes: code1
+#| code-line-numbers: false
+
+3 + 5
+```
+
+\
+
+```{r eval=TRUE, echo=TRUE, include =TRUE }
+#| classes: code1
+#| code-line-numbers: false
+
+(3+4) * 5^3 / 10
+
+```
+
+\
+
+```{r eval=TRUE, echo=TRUE, include =TRUE }
+#| classes: code1
+#| code-line-numbers: false
+
+(3.2 + 4.1) * 5.9^3 / 10.002
+
+```
+
+
+
+## Une super calculatrice
+
+\
+
+::: {.bigquat .center}
+Plusieurs types d'opérateurs sont disponibles :
+:::
+
+\
+
+::: {style="font-size:100%;"}
+Conditions |	[**Opérateurs relationnels**]{.colour} |	Exemple | Résultat
+:-:  | :-:  | :-: | :-:
+plus petit que  |	**<**  |	5 < 5 | FALSE
+plus grand que  |	**>**  |	5 > 5 | FALSE
+plus petit ou égal à  |	**<=**  |	5 <= 5 | TRUE
+plus grand ou égal à  |	**>=**  |	5 >= 5 | TRUE
+égal à  |	**==**  |	5 == 5  | TRUE
+différent de  |	**!=**  |	5 != 5  | FALSE
+présent dans |	**%in%**  |	5 %in% 1:5 | TRUE
+:::
+
+
+\
+
+[**x égale à y ?**]{.colour}
+
+```{r eval=TRUE, echo=TRUE, include =TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+5 == 5
+
+
+```
+
+\
+
+[**x différent de y ?**]{.colour}
+
+```{r eval=TRUE, echo=TRUE, include =TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+
+5 != 5
+
+
+```
+
+
+\
+
+[**x présent dans y ?**]{.colour}
+
+```{r eval=TRUE, echo=TRUE, include =TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+c(1,7,3,2) %in% c(7,4,5,3)
+
+```
+
+\
+\
+
+
+::: {style="font-size:100%;"}
+Condition |	[**Opérateurs logiques**]{.colour} 
+:-:  | :-: 
+différent de |	**!**
+et |	**&**
+ou | **I**
+ou exclusif |	**xor()**
+valeur manquante | **is.na()**
+valeur nulle | **is.null()**
+vrai | **isTRUE()**
+faux  | **isFALSE()**
+:::
+
+
+\
+
+[**Valeur manquante ?**]{.colour}
+
+```{r eval=TRUE, echo=TRUE, include =TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+is.na(NA)
+
+```
+
+\
+
+[**Différent de 'NA' ?**]{.colour}
+
+```{r eval=TRUE, echo=TRUE, include =TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+!is.na(13)
+
+```
+
+\
+
+[**Contrôle à deux conditions**]{.colour}
+
+```{r eval=TRUE, echo=TRUE, include =TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+!is.na(13) & 2 == 2
+
+```
+
+
+
+
+## Qui propose des fonctions avancées
+
+
+:::{.bigbis}
+Des milliers de fonctions pour manipuler, analyser et représenter ses données. [Une fonction contient une série de commandes (code) qui effectuent une tâche prédéfinie. Elle prend des informations (arguments) en entrée et renvoie un résultat.]{.colour} **Les fonctions s'utilisent toujours de la même façon : [nom_fonction()]{.colour}**
+:::
+
+
+
+\
+
+&rarr; Fonction `round()` pour **arrondir un nombre**
+
+```{r eval=TRUE, echo=TRUE, include =TRUE, fig.height=3.1}
+#| classes: code1
+#| code-line-numbers: false
+ 
+round(12.33453)
+
+```
+
+\
+
+&rarr; Fonction `nchar()` pour **calculer un nombre de caractères**
+
+```{r eval=TRUE, echo=TRUE, include =TRUE, fig.height=3.1}
+#| classes: code1
+#| code-line-numbers: false
+
+nchar("Institut Convergences Migrations")
+
+```
+
+
+\
+
+&rarr; Fonction `strsplit()` pour fractionner une chaine de caractère
+
+
+```{r eval=TRUE, echo=TRUE, include =TRUE, fig.height=3.1}
+#| classes: code1
+#| code-line-numbers: false
+
+strsplit(x = "Mali, Niger, Lybie, Italie, France", split = ", ")
+
+```
+
+\
+
+&rarr; Fonction `plot()` pour la **représentation graphique**
+```{r eval = TRUE, echo = TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+plot(x = 1:20, y = 11:30)
+```
+
+\
+
+:::{.bigbis}
+Dans la majorité des cas, [des **arguments doivent être renseignés pour utiliser une fonction**]{.colour}.
+:::
+
+```{r eval=TRUE, echo=TRUE, include =TRUE, fig.height=5}
+#| classes: code1
+#| code-line-numbers: false
+
+
+
+# Affichage graphique
+plot(x = 1:20, 
+     y = 11:30, 
+     type = "p",
+     pch = 15, 
+     cex = 2, 
+     col= "deepskyblue3",
+     main = "Mon premier plot avec R",
+     cex.main = 2,
+     col.main = "darkgoldenrod4",
+     col.axis = "red4",
+     xlab = "Ma première variable", 
+     ylab = "Ma seconde variable")
+
+
+```
+
+\
+
+:::{.bigquat}
+**Les fonctions peuvent être :**
+:::
+
+:::{.bigquat}
+- [mises à disposition par le **R base**]{.colour} (fonctions primitives ou standards), 
+- [mises à disposition par un **package**]{.colour} (extension du langage R base),  
+- [**développées en local**]{.colour} par les tous utilisateur.rices.
+:::
+
+
+
+# [R <- un_objet ]{.new_h2}
+
+## R = Programmation Orientée Objet ?
+
+\
+
+:::{.bigquat .center .colour}
+**Tout ce que l'on crée dans R sont des objets**.
+Mais contrairement au langage Python, **il ne s'agit pas d'un langage de POO.**
+:::
+
+\
+
+:::{.center}
+La POO est un paradigme de programmation basé sur le concept d’objets, qui peuvent contenir des données et métadonnées (attributs), et qui sont associés à des procédures, souvent appelées méthodes.
+
+
+![](img/POO_vs_procedural.png){width="60%"}
+
+:::
+
+
+
+:::{.bigquat .center style="margin-top:30px"}
+**Il est néanmoins possible de faire de la POO avec R !**
+:::
+
+
+
+## Créer un objet
+
+\
+
+:::{.bigbis}
+Pour créer un objet, **choisissez un nom et** [**assignez-lui un contenu avec le symbole**]{.colour}  [**<-**]{.colour style="font-size:130%"} 
+:::
+
+
+```{r eval=TRUE, echo=TRUE, include =TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+obj <- 15
+
+obj
+```
+
+\
+
+:::{.bigbis}
+Un objet peut-être réutilisé pour des calculs :
+:::
+
+```{r eval=TRUE, echo=TRUE, include =TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+obj + 20.55
+
+```
+
+\
+
+:::{.bigbis}
+Le contenu d'un objet peut être modifié :
+:::
+
+```{r eval=TRUE, echo=TRUE, include =TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+obj <- obj + 20.55
+
+obj
+```
+
+\
+
+:::{.bigbis}
+Un objet peut-être réutilisé dans une fonction
+:::
+
+
+```{r eval=TRUE, echo=TRUE, include =TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+round(obj)
+```
+
+
+## Type de données
+
+:::{.bigbis}
+Il est possible de stocker différents types de données à un objet R. Les plus classiques :
+:::
+
+\
+
+::: {style="font-size:100%;"}
+Type  |	définition  |	Exemple  
+:-:  | :-:  | :-: |
+**numeric** |	nombre   |	3 ou 4.23 
+**integer** |	nombre entier  |	3  
+**double** |	nombre double  |	4.23 
+**logical**  | logique ou	booléen  |	TRUE ou FALSE 
+**string** |	chaîne de caractères  |	"Hello"
+**factor**  |	string (modalités prédéfinies)  | "Hight"
+**date**  |	date formatée  |	2020-12-14
+**NA**  |	absence de valeur (tout type) |	NA 
+:::
+
+\
+
+:::{.bigbis .center}
+Exemples  :
+:::
+
+```{r eval=TRUE, echo=TRUE, include =TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+obj_na <- NA
+
+obj_num <- 3.14 
+
+obj_bool <- FALSE    
+
+obj_str <- "Bla bla..." 
+
+obj_dat <- as.Date("2023-11-28")
+
+```
+
+\
+
+:::{.big3}
+Différentes fonctions peuvent être appliquées aux différents types de données stockés, et aux différents types d'objets. Exemple :
+:::
+
+```{r eval=TRUE, echo=TRUE, include =TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+weekdays(obj_dat)
+
+```
+
+
+## Les objets R
+
+:::{.bigbis .center}
+Il existe plusieurs types d'objets permettant de stocker différents formats et types de données.\ 
+:::
+
+:::{.center .quatrevingtdix}
+- [**Function**]{.colour} - *Fonction*
+- [**Vector**]{.colour} - *liste d'éléments de même nature*
+- [**Data.frame**]{.colour} - *Tableau de données*
+- [**Matrix**]{.colour} - *Matrice*
+- [**Array**]{.colour} - *Ensemble de matrices*
+- [**List**]{.colour} - *Liste d'objet*
+- [**Factor**]{.colour} - *vecteur avec une liste de modalités prédéfinies*
+- [**Time serie**]{.colour} - *Série temporelle*
+- **...**
+:::
+
+:::{.bigbis .center style="margin-top:35px;"}
+De nombreux types d'objets sont également mis à disposition par différents packages. Ex :\ 
+:::
+
+:::{.center .quatrevingtdix}
+- [**Simple feature**]{.colour} - *Données géographiques vectorielle* - package [***sf***](https://cran.r-project.org/web/packages/sf/index.html){target="_blank"}\
+- [**SpatRaster**]{.colour} - *Données géographiques RASTER* - package [***terra***](https://cran.r-project.org/web/packages/terra/index.html){target="_blank"}\
+- **...**
+:::
+
+
+
+## Les indispensables
+
+\
+
+::: {.panel-tabset}
+
+# **Fonction**
+
+
+::: {.bigbis}
+Une fonction est un objet qui peut se construire avec la fonction `function()`
+:::
+
+```{r eval=TRUE, echo=TRUE, include =TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+ma_premiere_fonction <- function(who){ 
+  
+                                       message <- paste("Bienvenue à", who)
+                                       
+                                       return(message)
+  
+                                      }
+                            
+```
+
+
+\
+
+::: {.bigbis}
+`ma_premiere_fonction()` devient est une fonction comme une autre.
+:::
+
+```{r eval=TRUE, echo=TRUE, include =TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+ma_premiere_fonction( who = "l'Institut Convergences Migrations" )
+
+```
+
+
+
+# **Vecteur**
+
+::: {.bigbis}
+**Le vecteur est l'objet de base de R**. Il permet de stocker **plusieurs éléments du même type**.
+:::
+
+```{r echo=TRUE, include =TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+nom <- "Martina"
+
+```
+
+\
+
+::: {.bigbis}
+**La fonction `c()` permet de construire un vecteur de plusieurs éléments**
+:::
+
+```{r echo=TRUE, include =TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+noms <- c("Martina", "Leo", "Inès", "Joshua")
+
+noms
+
+```
+
+
+\
+
+::: {.bigbis}
+[Pour naviguer dans cet objet unidimensionnel, utilisez les crochets.]{.colour}
+:::
+
+
+*&rarr; Sélection du premier élément*
+
+```{r eval = TRUE, echo=TRUE, include =TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+
+noms[1]
+
+```
+
+\
+
+*&rarr; Sélection des éléments 2 et 4*
+
+```{r eval = TRUE, echo=TRUE, include =TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+noms[c(2,4)]
+
+```
+
+
+# **Data frame**
+
+::: {.bigbis}
+**Le data.frame correspond au tableau de données classique**. il se compose de plusieurs colonnes pouvant contenir des données de nature différente. [**Chaque colonne d'un data.frame est un vecteur**]{.colour}.
+:::
+
+
+```{r echo=TRUE, include =TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+# Construction de plusieurs vecteurs de même longueur
+
+nom <- c("Modibo Keïta", "Moussa Traoré", "Alpha Oumar Konaré")
+date_naissance <- c("1915-06-04", "1936-09-25", "1946-02-02")
+annee_arrivee_pouvoir <- c(1960, 1968, 1992)
+duree_au_pouvoir <- c(8, 23, NA)
+parcours_militaire <- c(FALSE, TRUE, FALSE)
+
+```
+
+\
+
+::: {.bigbis}
+**Utilisez la fonction `data.frame()` pour construire un tableau**
+:::
+
+
+```{r echo=TRUE, include =TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+mon_tableau <- data.frame(nom,
+                          date_naissance,
+                          annee_arrivee_pouvoir,
+                          duree_au_pouvoir,
+                          parcours_militaire )
+  
+mon_tableau 
+  
+```
+
+\
+
+
+::: {.bigbis}
+Utilisez les crochets pour naviguer dans un tableau : [mon_tableau [ **ligne , colonne** ]]{.colour}
+:::
+
+*&rarr; Sélection par index : première ligne et toutes les colonnes*
+
+
+```{r echo=TRUE, include =TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+mon_tableau[ 1 , ]
+
+```
+
+\
+
+*&rarr; Sélection par index : toutes les lignes et colonnes 1, 3 et 5*
+
+```{r  echo=TRUE, include =TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+mon_tableau[  , c(1,3,5)]
+
+```
+
+\
+
+*&rarr; Sélection par index : 2e ligne et colonnes 1 et 5*
+
+```{r  echo=TRUE, include =TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+mon_tableau[2, c(1,5)]
+```
+
+\
+
+*&rarr; Sélection par index : 2e ligne et colonnes "nom" et "parcours_militaire"*
+
+```{r  echo=TRUE, include =TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+mon_tableau[ 2 , c("nom", "parcours_militaire")]
+
+```
+
+\
+
+:::{bigbis}
+Vous pouvez également utiliser le signe $ pour séléctionner une colonne : [mon_tableau**$**date_naissance]{.colour}
+:::
+
+
+*&rarr; Sélection colonne 'date_naissance'*
+
+```{r echo=TRUE, include =TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+mon_tableau$date_naissance
+
+```
+
+\
+
+*&rarr; Valeur de la seconde ligne dans la colonne 'date_naissance'*
+
+
+```{r eval=FALSE, echo=TRUE, include =TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+mon_tableau$date_naissance[2]
+
+```
+
+\
+
+:::{bigbis}
+[**Utilisez les différents opérateurs pour sélectionner par condition**]{.colour}
+:::
+
+*&rarr; Sélection par condition*
+
+```{r eval=FALSE, echo=TRUE, include =TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+mon_tableau[mon_tableau$duree_au_pouvoir > 20 , ]
+ 
+mon_tableau[mon_tableau$annee_arrivee_pouvoir > 1965  &  mon_tableau$parcours_militaire == FALSE, ]
+
+mon_tableau[mon_tableau$duree_au_pouvoir >= 10  |  is.na(mon_tableau$duree_au_pouvoir), ]
+
+mon_tableau[nchar(mon_tableau$nom) > 15, ]
+```
+
+
+
+# **List**
+
+:::{.bigbis}
+**Une liste permet de stocker plusieurs objets (peu importe le type) en un seul**. Une liste est une collection d'objet. Utilisez la fonction **`list()`** pour construire une liste.
+:::
+
+
+```{r eval=TRUE, echo=TRUE, include =TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+Ma_list <- list(ma_premiere_fonction, 
+                noms,
+                mon_tableau)
+
+```
+
+\
+
+:::{.bigbis}
+**C'est un super objet** très utile et puissant. Cet objet est utilisé par plusieurs packages de référence. Pour naviguer dans une liste, utilisez des **doubles crochets** :   [**Ma_list[[ index ]]**]{.colour}
+:::
+
+\
+
+*&rarr; Sélection du 2nd objet de Ma_list*
+
+
+```{r eval=TRUE, echo=TRUE, include =TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+Ma_list[[2]]
+
+```
+
+\
+
+*&rarr; Sélection au sein d'un objet d'une liste (2e ligne et 1ère colonne de mon objet 3)*
+
+```{r eval=TRUE, echo=TRUE, include =TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+Ma_list[[3]][2 , 1]
+
+```
+
+:::
+
+
+# [R base & packages]{.new_h2}
+
+## Le *R base*
+
+\
+
+```{r warning=FALSE, message=FALSE, eval=TRUE, include= TRUE, echo=FALSE}
+
+library('rvest')
+url <- "https://cran.r-project.org/web/packages/available_packages_by_date.html"
+#Reading the HTML code from the website
+webpage <- read_html(url)
+td <- webpage %>%  html_nodes("td")
+rank_data <- html_text(td)
+
+vec <- c(NULL)
+for (t in seq(1,length(rank_data),3))  {
+vec <-  c(vec, rank_data[t])
+}
+
+library(stringr)
+vec <- str_trim(vec)
+test <- as.data.frame(vec)
+test$nb <- 1
+test$date <- as.Date(test$vec)
+test <- test[,c(3:2)]
+
+library(plyr)
+test2 <-  ddply(test, .(date), summarize, nb=sum(nb))
+test2$cum <- cumsum(test2$nb)
+test <- test2[,c(1:3)]
+
+nb_function_base <- length(lsf.str("package:base"))
+
+# Nombre de fonctions primitives
+base <- length(lsf.str("package:base")) 
+stats <- length(lsf.str("package:stats")) 
+utils <- length(lsf.str("package:utils")) 
+methods <- length(lsf.str("package:methods")) 
+grDevices <- length(lsf.str("package:grDevices")) 
+graphics <- length(lsf.str("package:graphics")) 
+datasets <- length(lsf.str("package:datasets")) 
+
+
+datasetsbase <- c(data(package = "datasets"))
+nb_datasets <- length(datasetsbase$results)
+  
+Nb_prim <- base + utils + stats + methods + grDevices + graphics + datasets 
+
+
+library(grid)
+library(splines)
+library(stats4)
+library(tcltk)
+library(tools)
+grid <- length(lsf.str("package:grid")) 
+splines <- length(lsf.str("package:splines")) 
+stats4 <- length(lsf.str("package:stats4")) 
+tcltk <- length(lsf.str("package:tcltk")) 
+tools <- length(lsf.str("package:tools")) 
+
+Nb_prim_2 <- grid + splines + stats4 + tcltk + tools
+
+tt_packages <- max(test$cum)
+
+```
+
+
+:::{.bigquat}
+[**Le langage R offre `r Nb_prim` fonctions de base***]{.colour} stockées dans 7 packages standards, **installés et chargés par défault**.
+:::
+
+
+:::{.big3 .center style="line-height:1;"}
+- **base** = `r base` **fonctions de base** qui permettent à R de fonctionner comme un langage
+- **utils** = `r utils` **fonctions utilitaires** (ex : installation de package, import/export...)
+- **stats** = `r stats` **fonctions statistiques** pour les calculs et la génération de nombres aléatoires
+- **grDevices** = `r grDevices` **fonctions pour la gestion des périphériques graphiques**
+- **graphics** = `r graphics` **fonctions graphiques**
+- **methods** = `r methods` **fonctions pour définir des méthodes et classes** pour les objets R
+- **datasets** = `r nb_datasets` **jeux de données** d'exemples
+:::
+
+:::{.big3}
+**`r Nb_prim_2` fonctions supplémentaires sont également mises à disposition** via 5 autres packages pré-installés (grid, splines, stats4, tcltk, tools), mais pas automatiquement chargés. (*le `r Sys.Date()`)
+:::
+
+\
+
+:::{.bigquat .center}
+[**Ce socle commun de fonctionnalité est couramment nommé le R-base**]{.colour}
+:::
+
+
+
+## Le *R base*
+
+\
+
+:::{.bigquat}
+[**Les fonctionnalités standards (ou primitives) proposées par le R-base permettent de réaliser beaucoup de choses.**]{.colour} Il est cependant nécessaire d'**installer des packages pour profiter de certaines fonctionnalités**, ex :
+:::
+
+\
+
+:::{.bigbis .center}
+- **Gérer des types de données spécifiques** (ex : géographique, image, son...)
+- **Utiliser des méthodes d'analyses spécifiques** (ex : réseau, séquence, NLP...)
+- Produire des **représentations graphiques particulières** et/ou élégantes
+- **Optimiser son code** (fonctions codées en C++, parallélisation...)
+- **Interagir avec d'autres outils** (web scraping, production de support...)
+- ...
+:::
+
+
+## Les packages du CRAN
+
+\
+
+:::{.bigquat}
+`r format(tt_packages, scientific=F)` packages sont disponibles sur le système officiel de stockage des packages : le [***Comprehensive R Archive Network***](https://cran.r-project.org/web/packages/available_packages_by_name.html){target="_blank"}.
+:::
+
+\
+
+:::{.bigbis}
+Installation d'un package du CRAN en ligne de commande
+:::
+
+```{r warning=FALSE, message=FALSE, eval=FALSE, include= TRUE, echo=TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+install.packages("mapsf")
+
+```
+
+
+
+\
+
+:::{.bigbis}
+Pour utiliser les fonctions du package, **chargez la librairie** :
+:::
+
+```{r warning=FALSE, message=FALSE, eval=FALSE, include= TRUE, echo=TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+library(mapsf)
+
+```
+
+*&rarr; Il est nécessaire de charger la librairie à chaque nouvelle session R*
+
+
+
+\
+\
+
+:::{.bigquat}
+Il existe également d'autres sources de stockage :
+:::
+
+:::{.bigbis}
+- [***Bioconductor***](https://www.bioconductor.org/){target="_blank"} qui concentre des packages portant sur l'analyse des données génomiques
+- [***R-forge***](https://r-forge.r-project.org/){target="_blank"} qui est une plateforme orientée vers les développeurs 
+- [***GitHub***](https://github.com/){target="_blank"} qui est un service web d'hébergement et de gestion de développement de logiciels, utilisant le logiciel de gestion de versions Git
+:::
+
+
+
+
+\
+
+:::{.bigbis}
+Pour installer un package stocké sur GitHub, commencez par installer le package `remotes` :
+:::
+
+```{r warning=FALSE, message=FALSE, eval=FALSE, include= TRUE, echo=TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+install.packages("remotes")
+
+```
+
+\
+
+:::{.bigbis}
+Puis utilisez sa fonction `install_github()` :
+:::
+
+
+```{r warning=FALSE, message=FALSE, eval=FALSE, include= TRUE, echo=TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+remotes::install_github("inseefrlab/apinsee")
+
+
+library(apinsee)
+
+```
+
+
+*il est nécessaire d'installer [Rtools](https://cran.r-project.org/bin/windows/Rtools/){target="_blank"} sur Windows pour réaliser cette opération.*
+
+
+
+
+# [Quelques packages pour les géomaticiens]{.new_h2}
+
+
+
+## Import de tableau de données
+
+
+::: columns
+::: {.column .center width="50%"}
+![](img/R.png){width="35%"}   
+[[**R base**](https://stat.ethz.ch/R-manual/R-devel/library/base/html/00Index.html){target="_blank"}]{.bigquat}   
+Fichiers texte   
+
+\
+
+![](img/readxl.png){width="25%"}   
+[[**readxl**](https://readxl.tidyverse.org/){target="_blank"}]{.bigquat}   
+Fichiers Excel  
+:::
+
+::: {.column .center width="50%"}
+
+![](img/readr.png){width="25%"}   
+[[**readr**](https://readr.tidyverse.org/){target="_blank"}]{.bigquat}      
+Tableaux (csv, tsf, fwf, log...)   
+
+\
+
+![](img/haven_logo.png){width="25%"}   
+[[**haven**](https://haven.tidyverse.org/){target="_blank"}]{.bigquat}     
+Données SPSS, Stata et SAS
+
+:::
+
+:::
+
+
+<!-- ## Collecte automatisée -->
+
+
+<!-- ::: columns -->
+<!-- ::: {.column .center width="50%"} -->
+<!-- ![](img/rvest.png){width="25%"}      -->
+<!-- [[**rvest**](http://rvest.tidyverse.org/)]{.bigquat}        -->
+<!-- web scraping (Rstudio)    -->
+
+<!-- \ -->
+
+<!-- ![](img/plumber.png){width="25%"}      -->
+<!-- [[**plumber**](https://www.rplumber.io/index.html)]{.bigquat}        -->
+<!-- Créer interface API    -->
+
+<!-- ::: -->
+
+<!-- ::: {.column .center width="50%"} -->
+<!-- ![](img/selenium.png){width="35%"}    -->
+<!-- [[**rselenium**]()]{.bigquat}          -->
+<!-- web scraping (Selenium)  -->
+
+<!-- \ -->
+
+
+
+<!-- :::{.quatrevingtdix}    -->
+<!-- **Interfaces d'API et BD** -->
+<!-- ::: -->
+
+<!-- :::{.soixantequinze}    -->
+<!-- [**eurostat**](http://ropengov.github.io/eurostat/articles/website/eurostat_tutorial.html) - [rOpenGov](http://ropengov.github.io/projects/) package - Interface API Eurostat    -->
+<!-- [**insee**](https://hadrilec.github.io/insee/) - Données et métadonnées INSEE ([BDM](https://api.insee.fr/catalogue/site/themes/wso2/subthemes/insee/pages/item-info.jag?name=BDM&version=V1&provider=insee))     -->
+<!-- [**wbstats**](https://github.com/nset-ornl/wbstats) et [**WDI**](https://vincentarelbundock.github.io/WDI/) - Interface API et données Banque mondiale      -->
+<!-- [**wpp2017**](https://cran.r-project.org/web/packages/wpp2017/index.html) - Données [UN](https://population.un.org/wpp/) (*World Population Prospects 2017*)     -->
+<!-- [**rnaturalearthdata**](https://github.com/ropensci/rnaturalearthdata) - [rOpenSci](https://ropensci.org/packages/) package - Données [Natural Earth](http://www.naturalearthdata.com/)      -->
+<!-- [**osmdata**](https://cran.r-project.org/web/packages/osmdata/vignettes/osmdata.html) - [rOpenSci](https://ropensci.org/packages/) package - Interface API [OpenStreetMap](https://www.openstreetmap.fr/)      -->
+<!-- [**rtweet**](https://github.com/ropensci/rtweet) - [rOpenSci](https://ropensci.org/packages/) package - Interface API [Twitter](https://twitter.com/?lang=fr)     -->
+<!-- [**tuber**](https://github.com/soodoku/tuber) - Interface API [Youtube](https://www.youtube.com/?hl=fr&gl=FR)     -->
+<!-- [**spotifyr**](https://github.com/charlie86/spotifyr) - Interface API [Spotify](https://www.spotify.com/fr/)     -->
+<!-- [**googleAuthR**](https://code.markedmondson.me/googleAuthR/), [**googleAnalyticsR**](https://code.markedmondson.me/googleAnalyticsR/), [**searchConsoleR**](http://code.markedmondson.me/searchConsoleR/)... - API's [Google](https://www.google.com/)      -->
+<!-- ... -->
+<!-- ::: -->
+
+<!-- ::: -->
+
+<!-- ::: -->
+
+
+## Manipulation de tableau de données
+
+::: columns
+::: {.column .center width="50%"}
+![](img/R.png){width="45%"}   
+[[**R base**](https://stat.ethz.ch/R-manual/R-devel/library/base/html/00Index.html){target="_blank"}]{.bigquat}      
+Manipulation de données
+
+\
+
+![](img/dplyr.png){width="30%"}   
+[[**dplyr**](https://dplyr.tidyverse.org/){target="_blank"}]{.bigquat}       
+Manipulation de données
+
+\
+
+![](img/lubridate.png){width="30%"}      
+[[**lubridate**](https://lubridate.tidyverse.org/){target="_blank"}]{.bigquat}       
+Manipulation de dates
+
+:::
+
+::: {.column .center width="50%"}
+
+![](img/datatable.png){width="37%"}     
+[[**data.table**](https://rdatatable.gitlab.io/data.table/){target="_blank"}]{.bigquat}       
+Manipulation de données   
+
+\
+
+![](img/tidyr.png){width="30%"}   
+[[**tidyr**](https://tidyr.tidyverse.org/){target="_blank"}]{.bigquat}       
+Manipulation de tableaux  
+
+\
+
+![](img/stringr.png){width="30%"}      
+[[**stringr**](https://stringr.tidyverse.org/){target="_blank"}]{.bigquat}        
+Chaînes de caractères
+
+:::
+
+:::
+
+
+
+## Le tidyverse
+
+![](img/tidyverse.png){width=120%}
+
+:::{.bigbis}
+Collection de packages conçues pour fonctionner ensemble et basés sur une philosophie commune. Ils abordent un très grand nombre d'opérations courantes dans R.
+
+Ils sont en grande partie issues du travail d’[Hadley Wickham](http://hadley.nz/){target="_blank"}, développeur emblématique qui travaille pour RStudio.
+:::
+
+
+
+
+<!-- ## Statistique mulivariée -->
+
+<!-- \ -->
+
+<!-- :::{.bigquat} -->
+<!-- - [**R base**](https://stat.ethz.ch/R-manual/R-devel/library/base/html/00Index.html) : Statistique univariée, bivariée, test de probabilité... -->
+<!-- - [**FactoMineR**](http://factominer.free.fr/index_fr.html) : Analyse exploratoire multidimensionnelle  -->
+<!-- cf. *FactoInvestigate*, *factoextra*, *Factoshiny*... -->
+<!-- - [**ade4**](http://pbil.univ-lyon1.fr/ade4/) : Analyse exploratoire multidimensionnelle avec procédures exploratoires d'essence euclidienne -->
+<!-- - [**easystats**](https://easystats.github.io/blog/portfolio/) : Suite de packages pour faciliter   l'utilisation de techniques statistiques avancées -->
+
+<!-- \ -->
+
+<!-- &rarr; [**explor**](https://juba.github.io/explor/) : interactive exploration of multivariate analysis results -->
+
+<!-- ::: -->
+
+<!-- ## Traitement d'enquête -->
+
+
+<!-- ::: columns -->
+
+<!-- :::{.column .center width="33%"} -->
+
+<!-- \ -->
+<!-- \ -->
+<!-- \ -->
+
+<!-- ![](img/R.png){width="60%"}    -->
+<!-- [[**R base**](https://stat.ethz.ch/R-manual/R-devel/library/base/html/00Index.html)]{.bigquat}           -->
+<!-- Statistique basique, tableaux croisés... -->
+<!-- ::: -->
+
+<!-- :::{.column .center width="33%"} -->
+
+<!-- \ -->
+
+<!-- ![](img/survey.jpg){width="60%"}    -->
+<!-- [[**survey**](http://r-survey.r-forge.r-project.org/survey/)]{.bigquat}        -->
+<!-- Construction de plan d'échantillonnage complexe -->
+<!-- ::: -->
+
+<!-- :::{.column .center width="33%"} -->
+
+<!-- \ -->
+<!-- \ -->
+<!-- \ -->
+
+<!-- ![](img/questionnair.png){width="60%"}    -->
+<!-- [[**questionr**](https://juba.github.io/questionr/index.html)]{.bigquat}          -->
+<!-- Contient un *addin* (interface graphique) -->
+<!-- ::: -->
+
+<!-- ::: -->
+
+<!-- ## Analyse Textuelle -->
+
+
+<!-- \ -->
+
+<!-- :::{.bigquat} -->
+<!-- - [**quanteda**](https://quanteda.io/) : -->
+<!-- Manipulation et analyse de corpus Issue de l'ERC QUANTESS. -->
+
+<!-- - [**spacyr**](https://spacyr.quanteda.io/) :  -->
+<!-- TAL. Adaptation de la librairie Python [spaCy](https://spacy.io) -->
+
+
+<!-- - [**tm**](http://tm.r-forge.r-project.org/index.html) :  -->
+<!-- Text mining -->
+
+<!-- - [**tidytext**](https://github.com/juliasilge/tidytext) : -->
+<!-- Text mining - compatible [tidyverse](https://www.tidyverse.org/) -->
+
+
+<!-- - [**text2vec**](http://text2vec.org/) : -->
+<!-- Text mining et TAL -->
+
+<!-- - [**R.temis**](https://rtemis.hypotheses.org/r-temis-dans-rstudio) : Manipulation et analyse de corpus -->
+
+
+<!-- \ -->
+
+<!-- **Package avec interface graphique :** -->
+
+<!-- - [**RcmdrPlugin.temis**](https://rtemis.hypotheses.org/r-temis-dans-rcmdr) : Interface graphique pour R.temis -->
+<!-- - [**IRaMuTeQ**](http://www.iramuteq.org/) : Analyses Multidimensionnelles de Textes et de Questionnaires -->
+
+<!-- ::: -->
+
+
+<!-- ## Analyse de réseau -->
+
+<!-- \ -->
+<!-- \ -->
+
+<!-- :::{.bigquat} -->
+<!-- - [**igraph**](https://igraph.org/r/) : -->
+<!-- Analyse de graphe. Disponible en c/c++, python et Mathematica    -->
+
+<!-- - [**tnet**](https://cran.r-project.org/web/packages/tnet/tnet.pdf) :  -->
+<!-- Analyse pondérée, bimodale et longitudinale des graphe -->
+
+<!-- - [**bipartite**](https://github.com/biometry/bipartite) :  -->
+<!-- Analyse de graphe biparti -->
+
+<!-- - [**blockmodeling**](https://cran.r-project.org/web/packages/blockmodeling/blockmodeling.pdf) : -->
+<!-- Modélisation de réseau valué -->
+
+<!-- - [**Rsiena**](https://www.stats.ox.ac.uk/~snijders/siena/) :  -->
+<!-- Simulation de modèles stochastiques -->
+<!-- ::: -->
+
+
+
+
+## Import et traitement de données géographiques
+
+
+
+::: columns
+::: {.column .center width="50%"}
+![](img/sf.gif){width="34%"}       
+[[**sf**](https://r-spatial.github.io/sf/){target="_blank"}]{.bigquat}         
+**Import, manipulation et analyse**   de **données vectorielles**    
+
+\
+
+![](img/cube1.png){width="45%"}     
+[[**stars**](https://r-spatial.github.io/stars/){target="_blank"}]{.bigquat}    
+**Import et traitement** de données **raster** (et vecteurs)     
+:::
+
+::: {.column .center width="50%"}
+
+![](img/raster.png){width="45%"}     
+[[**raster**](https://rspatial.org/raster/pkg/index.html){target="_blank"}]{.bigquat}          
+**Import, manipulation et analyse** de données **raster**   
+
+\
+
+![](img/terra.png){width="30%"}     
+[[**terra**](https://rspatial.org/terra){target="_blank"}]{.bigquat}        
+**Import et traitement** de données **raster** (et vecteurs)    
+
+:::
+
+:::
+
+
+
+
+## Représentation Graphique
+
+::: columns
+::: {.column .center width="50%"}
+![](img/R.png){width="45%"}       
+[[**R base**](https://stat.ethz.ch/R-manual/R-devel/library/base/html/00Index.html){target="_blank"}]{.bigquat}      
+Représentation graphique standard    
+
+\
+
+![](img/esquisse.png){width="40%"}     
+[[**esquisse**](https://dreamrs.github.io/esquisse/){target="_blank"}]{.bigquat}       
+Interface graphique pour créer des graphiques ggplot2
+:::
+
+::: {.column .center width="50%"}
+
+![](img/hexggplot2.png){width="30%"}     
+[[**ggplot2**](https://ggplot2.tidyverse.org/){target="_blank"}]{.bigquat}      
+Représentation graphique avancée basée sur la [grammaire graphique](https://www.springer.com/gp/book/9780387245447){target="_blank"}   
+
+\
+
+![](img/plotly.png){width="30%"}     
+[[**plotly**](https://plotly.com/r/){target="_blank"}]{.bigquat}        
+Graphiques interactifs, adaptation librairie JavaScript   
+
+:::
+
+:::
+
+
+\
+
+
+:::{.center}
+
+![](img/esquisse.gif)
+
+:::
+
+
+## Cartographie
+
+
+::: columns
+::: {.column .center width="50%"}
+![](img/tmap2.png){width="30%"}        
+[[**tmap**](https://cran.r-project.org/web/packages/tmap/vignettes/tmap-getstarted.html){target="_blank"}]{.bigquat}             
+Cartographie thématique      
+
+
+\
+\
+\
+
+![](img/leaflet.png){width="55%"}        
+[[**leaflet**](https://rstudio.github.io/leaflet/){target="_blank"}]{.bigquat}           
+Adaptation librairie JavaScript     
+
+:::
+
+::: {.column .center width="50%"}
+
+
+![](img/cartography2.png){width="30%"}     
+[[**mapsf**](https://riatelab.github.io/mapsf/index.html){target="_blank"}]{.bigquat}           
+Cartographie thématique   
+
+
+\
+
+![](img/mapview.gif){width="30%"}        
+[[**mapview**](https://r-spatial.github.io/mapview/){target="_blank"}]{.bigquat}       
+Carte interactive basée sur API Leaflet     
+
+:::
+
+:::
+
+
+
+
+
+## Valorisation & Publication
+
+
+::: columns
+::: {.column .center width="50%"}
+
+![](img/rmarkdown.png){width="30%"}       
+[[**rmarkdown**](https://rmarkdown.rstudio.com/){target="_blank"}]{.bigquat}         
+*Literate programming*        
+
+\
+
+![](img/xaringan.png){width="30%"}    
+[[**xaringan**](https://github.com/yihui/xaringan){target="_blank"}]{.bigquat}    
+*Literate programming*  -  diaporama
+
+\
+
+![](img/pagedown.png){width="30%"}         
+[[**pagedown**](https://github.com/rstudio/pagedown){target="_blank"}{.bigquat}      
+*Literate programming*  - Créer PDFs avec CSS (comme LaTeX)...  
+
+\
+
+
+![](img/shiny.png){width="30%"}  
+[[**shiny**](https://shiny.rstudio.com/){target="_blank"}]{.bigquat}      
+Application interactive
+
+
+:::
+
+::: {.column .center width="50%"}
+ 
+![](img/knitr.png){width="30%"}        
+[[**knitr**](https://yihui.org/knitr/){target="_blank"}]{width="30%"}         
+Compilation de document (notebook) 
+
+\
+
+![](img/bookdown.png){width="30%"}     
+[[**bookdown**](https://bookdown.org/){target="_blank"}]{.bigquat}          
+*Literate programming* - Format Livre
+
+\
+
+![](img/blogdown.png){width="30%"}   
+[[**blogdown**](https://bookdown.org/yihui/blogdown/){target="_blank"}]{.bigquat}       
+Construction de siteweb statique
+
+
+\
+\
+
+![](img/flex.png){width="30%"}  
+[[**flexdashboard**](https://rmarkdown.rstudio.com/flexdashboard/){target="_blank"}]{.bigquat}     
+Tableau de bord
+
+:::
+
+:::
+
+\
+
+
+**Et de nombreux modèles de mise en page**... Ex : [**rmdformats**](https://github.com/juba/rmdformats) (documents HTML)      
+
+
+
+
+
+## [Depuis 2022 : <img src="img/quarto.png" width="230" style="margin-top:0px;margin-bottom:-10px;"/>]{.smaller}
+
+\
+
+:::columns
+
+:::{.column width="55%"}
+
+:::{.bigbis}
+
+[**Quarto est un nouveau système open-source de publication d’articles scientifiques**, plus moderne que le Rmarkdown et facilement adaptable à différents cadres d’utilisation.]{.colour}
+
+
+Quarto est développé par Posit™️ (Rstudio). Cet outil est ainsi directement accessible depuis l'IDE Rstudio .Il permet d'exploiter différents langages de programmation tels que R, Python, Julia ou JavaScript.
+
+
+:::
+
+:::
+
+
+:::{.column width="45%"}
+
+![](img/quarto_ex2.png)
+
+:::   
+
+:::
+
+
+
+:::{.bigbis}
+
+[**Quarto unifie et étend les fonctionnalités offertes par les différents notebooks existants, plus particulièrement les extensions Rmarkdown.**]{.colour}
+
+:::
+
+
+\
+
+
+:::{.center}
+**Ce Diaporama est un notebook Quarto**. Pour en savoir plus, cliquez [**ici**](https://elementr.gitpages.huma-num.fr/session_notebook/programmation_lettree/){target="_blank"}
+:::
+
+
+# [Aide et documentation]{.new_h2}
+
+
+## Error & Warning
+
+\
+
+:::{.bigquat .center}
+
+[Commencez par lire les messages que renvoie la console !]{.colour}
+
+:::
+
+:::{.center}
+
+![](img/error.png){width="100%"}
+
+:::
+
+\
+
+## Auto-complétion 
+
+\
+
+
+:::{.bigquat}   
+La fonctionnalité d'[auto-complétion](https://blog.rstudio.com/2015/02/23/rstudio-v0-99-preview-code-completion/){target="_blank"} proposée par Rstudio peut être très efficace. Utilisez la touche *tab*.
+:::
+
+
+\
+
+
+:::{.center}
+![](img/tab.png){style="margin-bottom:50px;"}![](img/dart.png){width="5%" style="margin-left:70px;margin-bottom:100px;"}![](img/Capture2.PNG){width="40%" style="margin-left:80px;"}
+:::
+
+
+\
+\
+
+
+:::{.center}
+
+![](img/Capture0.PNG){width="90%"}
+
+\
+
+![](img/Capture1.PNG){width="90%"}
+
+:::
+
+
+
+
+## Documentation obligatoire
+
+Les packages (base et CRAN) sont obligatoirement accompagnés d'une documentation. 
+Vous pouvez y accéder en ligne de commande ou en clic-bouton :
+
+
+```{r warning=FALSE, message=FALSE, eval=FALSE, include= TRUE, echo=TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+
+
+library(mapsf)
+
+help(mapsf)
+
+?mapsf
+
+?mf_map
+
+```
+
+
+
+\
+
+:::columns
+
+:::{.column  .center width="50%"}
+
+![](img/mf_doc.png)
+
+\
+
+![](img/mf_doc3.png)
+
+:::
+
+:::{.column  .center width="50%"}
+
+![](img/mf_doc2.png)
+
+:::
+
+:::
+
+
+
+
+## Documentation officielle supplémentaire 
+
+\
+
+:::{.bigquat}
+La majorité des packages de référence propose de la documentation plus digeste à travers différents formats comme une [vignette](https://r-pkgs.org/vignettes.html), une [cheatsheet](https://rstudio.com/resources/cheatsheets/){target="_blank"}, voire même un [site web]{.colour}.
+:::
+
+
+\
+
+:::columns
+
+:::{.column .bigbis .center width="50%"}
+
+[Vignette]{.colour} du package `mapsf`
+
+![](img/vignette_mapsf.png){width="100%"}  
+
+
+
+:::
+
+:::{.column .bigbis .center width="50%"}
+
+[Cheatsheet]{.colour} (antisèche) du package `mapsf`
+
+![](img/cheatsheet_mapsf.png){width="100%"}      
+
+
+:::
+
+:::
+
+\
+
+:::{.bigbis .center}
+[Site web]{.colour} du package `mapsf`
+
+![](img/site_mapsf.png){width="100%"}  
+:::
+
+
+## Et tout le reste ! 
+
+\
+
+:::{.bigbis .center}
+
+[**La communauté R est très active et prolifique en matière de partage et de documentation**]{.colour}. Des milliers de ressources sur la pratique de R sont accessibles sur le web. 
+
+Pour vous aider :
+
+:::
+
+:::columns
+
+:::{.column .center width="50%"}
+
+![](img/Rzine.png){width="40%"}
+
+:::{.bigbis}
+[**Rzine.fr**](http://rzine.fr/){target="_blank"}
+:::
+
+Référencement de ressources sur la pratique de R en SHS
+
+:::
+
+:::{.column .center width="50%"}
+
+
+![](img/ElementR.png){width="40%"}
+
+
+:::{.bigbis}
+[**ElementR**](https://elementr.netlify.app/){target="_blank"}
+:::
+
+Groupe d'utilisateur·rices pour le traitement de l’information géographique avec R
+
+:::
+
+:::
+
+\
+\
+\
+
+:::{.bigbis .center}
+**Exemples de ressources (en géomatique) référencées sur rzine.fr :**
+
+- [Spatial Data Science](https://r-spatial.org/book/){target="_blank"}   
+- [Geocomputation with R](https://r.geocompx.org/){target="_blank"}
+- [Spatial Data Science with R](https://rspatial.org/index.html){target="_blank"}   
+- [Géomatique avec R](https://rcarto.github.io/cartographie_avec_r/){target="_blank"}   
+- [Cartographie avec R](https://rcarto.github.io/geomatique_avec_r/){target="_blank"}   
+
+:::
+
+
+
+
+
+## **Diaporama Quarto Reveal JS construit avec...**
+
+\
+
+:::{.center}
+![](img/R.png){width="30%"}
+
+`r sessionInfo()[1]$R.version$version.string`
+
+
+\
+\
+
+:::{.bigbis .center} 
+**Diapositives libres (CC BY 4.0) :**
+:::
+
+:::{.big3} 
+ 
+**Consultation** : [https://huguespecout.github.io/Intro_R_USSEIN/](https://huguespecout.github.io/Intro_R_USSEIN/){target="_blank"}
+
+**Code source** : [https://github.com/HuguesPecout/Intro_R_USSEIN](https://github.com/HuguesPecout/Intro_R_USSEIN){target="_blank"}
+
+:::
+
+\
+\
+
+
+:::
+
+:::{.bigbis .center} 
+**Informations de session :**
+:::
+
+
+```{r warning=FALSE, message=FALSE, eval=TRUE, include= TRUE, echo=TRUE}
+#| classes: code1
+#| code-line-numbers: false
+
+
+sessionInfo()
+
+```
+
+\
+\
+
+
+
+
+## Mise en application !
+
+\
+\
+
+:::{.big75}
+
+**Support de cours (1) **: [Géomatique avec R](https://rcarto.github.io/geomatique_avec_r/){target="_blank"}    
+**Support de cours (2) **: [Cartographie avec R](https://rcarto.github.io/cartographie_avec_r/){target="_blank"}
+
+:::
+
+\
+
+:::{.bigquat}
+- *Exercice 1* : [Cartographie avec mapsf](https://github.com/HuguesPecout/GeoExo_Carto_R){target="_blank"}    
+- *Exercice 2* : [Manipulation de données vectorielles](https://github.com/HuguesPecout/GeoExo_sf_R){target="_blank"}      
+- *Exercice 3* : [R, OpenStreetMap et OSRM](https://github.com/HuguesPecout/GeoExo_osm_R){target="_blank"}    
+
+:::
+
+
+
+
+
