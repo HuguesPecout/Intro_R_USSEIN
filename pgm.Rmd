@@ -1,8 +1,7 @@
 ---
 title: "MASTER Géomatique - USSEIN"
 subtitle: "Semaine du 19 au 23 février 2024"
-author: "Hugues Pecout"
-
+author: "Hugues Pecout (CNRS, UMR Géographie-Cités)"
 output: html_document
 ---
 
@@ -71,6 +70,17 @@ Exercices :
 
 
 
+\
+\
+\
+\
+\
 
+\
+
+<center>
+Github : [https://github.com/HuguesPecout](https://github.com/HuguesPecout){target="_blank"}               
+GitLab : [https://gitlab.huma-num.fr/hpecout](https://gitlab.huma-num.fr/hpecout){target="_blank"}    
+</center>
 
 
