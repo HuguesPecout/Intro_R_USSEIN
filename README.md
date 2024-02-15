@@ -1,8 +1,8 @@
-# Analyse de données avec R
+# Introduction au langage R
 
-## Utilisation d’un langage de programmation Open Source pour les SHS
+## Pour la manipulation, l’analyse et la représentation de données géographiques
 
-### Formation « Données climatiques et données migratoires », l'Institut Convergences Migrations, Novembre 2023
+### Master Géomatique, Université du Sine Saloum El-Hâdj Ibrahima NIASS
 
 
-&rarr; Consulter le [**diaporama**](https://icm-intro-r-hpecout-2f8b698b44c8fcbba51fc31df918c3ac1311a83e670.gitpages.huma-num.fr/#/title-slide)
+&rarr; Consulter le [**diaporama**](https://huguespecout.github.io/Intro_R_USSEIN/e)
