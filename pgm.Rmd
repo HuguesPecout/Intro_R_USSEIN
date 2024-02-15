@@ -62,6 +62,15 @@ Exercices :
 
 \
 
+#### Livres :
+
+**Spatial Data Science** : [https://r-spatial.org/book/](https://r-spatial.org/book/*){target="_blank"}     
+**Geocomputation avec R** (original) : [https://r.geocompx.org/](https://r.geocompx.org/){target="_blank"}         
+**Geocomputation avec R** (traduction fr) : [https://r.geocompx.org/fr/](https://r.geocompx.org/fr/){target="_blank"}         
+**Spatial Data Science with R** : [https://rspatial.org/index.html](https://rspatial.org/index.html){target="_blank"}     
+\
+
+
 #### Supports de formation :
 
 **Cartographie thématique avec Magrit** : [https://github.com/magrit-formations](https://github.com/magrit-formations){target="_blank"}        
