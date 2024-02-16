@@ -40,6 +40,21 @@ Supports de cours :
 
 \
 
+Packages nécessaires :
+
+    install.packages("sf")
+    install.packages("mapsf")
+    install.packages("terra")
+    install.packages("mapview")
+    install.packages("maptiles")
+    install.packages("osrm")
+    install.packages("osmdata")
+    install.packages("units")
+    install.packages("tidygeocoder")
+
+\
+
+
 Exercices :
 
 - ***Exercice 1*** - Cartographie avec mapsf : [https://github.com/HuguesPecout/GeoExo_Carto_R](https://github.com/HuguesPecout/GeoExo_Carto_R){target="_blank"}    
