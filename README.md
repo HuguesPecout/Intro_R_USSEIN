@@ -31,6 +31,7 @@
 
 Supports de cours :
 
+- **Introduction au langage R** : [https://huguespecout.github.io/Intro_R_USSEIN/](https://huguespecout.github.io/Intro_R_USSEIN/)     
 - **Géomatique avec R** : [https://rcarto.github.io/geomatique_avec_r/](https://rcarto.github.io/geomatique_avec_r/)     
 - **Cartographie avec R** : [https://rcarto.github.io/cartographie_avec_r/](https://rcarto.github.io/cartographie_avec_r/)    
 
