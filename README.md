@@ -8,35 +8,34 @@
 
 </br>
 
-\
+</br>
 
 
 ## Programme et matériel
 
-
-\
+</br>
 
 #### Lundi 19 février : **Introduction à la cartographie thématique & au logiciel Magrit** 
 
-\
+</br>
 
 Rappel des fondamentaux : [https://huguespecout.github.io/Intro_carto_thematique/](https://huguespecout.github.io/Intro_carto_thematique/)
 
 Logiciel Magrit : [https://magrit.cnrs.fr/](https://magrit.cnrs.fr/)
 
-\
-\
+</br>
+</br>
 
 #### Du Mardi 20 au Vendredi 23 février : **Géomatique & cartographie avec R**
 
-\
+</br>
 
 Supports de cours :
 
 - **Géomatique avec R** : [https://rcarto.github.io/geomatique_avec_r/](https://rcarto.github.io/geomatique_avec_r/){target="_blank"}     
 - **Cartographie avec R** : [https://rcarto.github.io/cartographie_avec_r/](https://rcarto.github.io/cartographie_avec_r/){target="_blank"}    
 
-\
+</br>
 
 Packages nécessaires :
 
@@ -50,7 +49,7 @@ Packages nécessaires :
     install.packages("units")
     install.packages("tidygeocoder")
 
-\
+</br>
 
 
 Exercices :
@@ -59,21 +58,20 @@ Exercices :
 - ***Exercice 2*** - Manipulation de données vectorielles :[https://github.com/HuguesPecout/GeoExo_sf_R](https://github.com/HuguesPecout/GeoExo_sf_R){target="_blank"}      
 - ***Exercice 3*** - R, OpenStreetMap et OSRM :[https://github.com/HuguesPecout/GeoExo_osm_R](https://github.com/HuguesPecout/GeoExo_osm_R){target="_blank"}    
 
-\
-\
-\
-
+</br>
+</br>
+</br>
 
 ## Ressources supplémentaires
 
-\
+</br>
 
 #### Sites web :
 
 **Rzine** - Ressources diverses sur la pratique de R en SHS (et géomatique) : [https://rzine.fr/](https://rzine.fr/){target="_blank"}         
 **ElementR** - Groupe d'utilisateurs pour le traitement de l'information Géographique avec R : [https://elementr.netlify.app/](https://elementr.netlify.app/){target="_blank"} 
 
-\
+</br>
 
 #### Livres :
 
@@ -81,7 +79,9 @@ Exercices :
 **Geocomputation avec R** (original) : [https://r.geocompx.org/](https://r.geocompx.org/){target="_blank"}         
 **Geocomputation avec R** (traduction fr) : [https://r.geocompx.org/fr/](https://r.geocompx.org/fr/){target="_blank"}         
 **Spatial Data Science with R** : [https://rspatial.org/index.html](https://rspatial.org/index.html){target="_blank"}     
-\
+
+
+</br>
 
 
 #### Supports de formation :
@@ -91,14 +91,12 @@ Exercices :
 **Document computationnel avec R** : [https://elementr.gitpages.huma-num.fr/session_notebook/programmation_lettree/](https://elementr.gitpages.huma-num.fr/session_notebook/programmation_lettree/){target="_blank"}        
 
 
-
-\
-\
-\
-\
-\
-
-\
+</br>
+</br>
+</br>
+</br>
+</br>
+</br>
 
 <center>
 Github : [https://github.com/HuguesPecout](https://github.com/HuguesPecout){target="_blank"}               
