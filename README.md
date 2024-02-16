@@ -68,7 +68,7 @@ Exercices :
 #### Sites web :
 
 **Rzine** - Ressources diverses sur la pratique de R en SHS (et géomatique) : [https://rzine.fr/](https://rzine.fr/)         
-**ElementR** - Groupe d'utilisateurs pour le traitement de l'information Géographique avec R : [https://elementr.netlify.app/](https://elementr.netlify.app/) 
+**ElementR** - Groupe d'utilisateurs pour le traitement de l'info. Géo. avec R : [https://elementr.netlify.app/](https://elementr.netlify.app/) 
 
 </br>
 
