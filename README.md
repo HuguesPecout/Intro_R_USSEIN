@@ -19,8 +19,8 @@
 
 </br>
 
-Rappel des fondamentaux : [https://huguespecout.github.io/Intro_carto_thematique/](https://huguespecout.github.io/Intro_carto_thematique/)       
-Logiciel Magrit : [https://magrit.cnrs.fr/](https://magrit.cnrs.fr/)
+- Rappel des fondamentaux : [https://huguespecout.github.io/Intro_carto_thematique/](https://huguespecout.github.io/Intro_carto_thematique/)       
+- Logiciel Magrit : [https://magrit.cnrs.fr/](https://magrit.cnrs.fr/)
 
 </br>
 
