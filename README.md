@@ -15,17 +15,17 @@
 
 </br>
 
-#### Lundi 19 février : **Introduction à la cartographie thématique & au logiciel Magrit** 
+### Lundi 19 février : **Introduction à la cartographie thématique & au logiciel Magrit** 
 
 </br>
 
-Rappel des fondamentaux : [https://huguespecout.github.io/Intro_carto_thematique/](https://huguespecout.github.io/Intro_carto_thematique/)
+Rappel des fondamentaux : [https://huguespecout.github.io/Intro_carto_thematique/](https://huguespecout.github.io/Intro_carto_thematique/)       
 Logiciel Magrit : [https://magrit.cnrs.fr/](https://magrit.cnrs.fr/)
 
 </br>
 
 
-#### Du Mardi 20 au Vendredi 23 février : **Géomatique & cartographie avec R**
+### Du Mardi 20 au Vendredi 23 février : **Géomatique & cartographie avec R**
 
 </br>
 
