@@ -15,11 +15,12 @@ knitr::opts_chunk$set(echo = TRUE)
 \
 
 
-# Programme et matériel
+## Programme et matériel
 
 
-## Lundi 19 février : **Introduction à la cartographie thématique & au logiciel Magrit** 
+### Lundi 19 février : **Introduction à la cartographie thématique & au logiciel Magrit** 
 
+\
 
 Rappel des fondamentaux : [https://huguespecout.github.io/Intro_carto_thematique/](https://huguespecout.github.io/Intro_carto_thematique/)
 
@@ -28,17 +29,18 @@ Logiciel Magrit : [https://magrit.cnrs.fr/](https://magrit.cnrs.fr/)
 \
 
 
-## Du Mardi 20 au Vendredi 23 février : **Géomatique & cartographie avec R**
+### Du Mardi 20 au Vendredi 23 février : **Géomatique & cartographie avec R**
 
 
-#### Supports de cours :
+##### Supports de cours :
 
 - **Introduction au langage R** : [https://huguespecout.github.io/Intro_R_USSEIN/](https://huguespecout.github.io/Intro_R_USSEIN/){target="_blank"}    
 - **Géomatique avec R** : [https://rcarto.github.io/geomatique_avec_r/](https://rcarto.github.io/geomatique_avec_r/){target="_blank"}     
 - **Cartographie avec R** : [https://rcarto.github.io/cartographie_avec_r/](https://rcarto.github.io/cartographie_avec_r/){target="_blank"}    
 
+\
 
-#### Packages nécessaires :
+##### Packages nécessaires :
 
     install.packages("sf")
     install.packages("mapsf")
@@ -50,9 +52,9 @@ Logiciel Magrit : [https://magrit.cnrs.fr/](https://magrit.cnrs.fr/)
     install.packages("units")
     install.packages("tidygeocoder")
 
+\
 
-
-#### Données utilisées :
+##### Données utilisées :
 
 - **Couches vectorielles sur le Sénégal** (Régions, département, routes...) : [**GeoSenegal.gpkg**](https://github.com/HuguesPecout/GeoExo_Carto_R/tree/main/data/GeoSenegal.gpkg)    
 
@@ -67,9 +69,9 @@ Source : [Géo Sénégal](https://www.geosenegal.gouv.sn/), 2024
 Source : [Agence nationale de la statistique et de la démographie](https://www.ansd.sn/){target="_blank"}, 2024
 :::
 
+\
 
-
-#### Exercices :
+##### Exercices :
 
 - ***Exercice 1*** - Cartographie avec mapsf : [https://github.com/HuguesPecout/GeoExo_Carto_R](https://github.com/HuguesPecout/GeoExo_Carto_R){target="_blank"}    
 - ***Exercice 2*** - Manipulation de données vectorielles :[https://github.com/HuguesPecout/GeoExo_sf_R](https://github.com/HuguesPecout/GeoExo_sf_R){target="_blank"}      
@@ -79,24 +81,26 @@ Source : [Agence nationale de la statistique et de la démographie](https://www.
 
 
 
-# Ressources supplémentaires
+## Ressources supplémentaires
 
 
-### Sites web :
+#### Sites web :
 
 **Rzine** - Ressources diverses sur la pratique de R en SHS (et géomatique) : [https://rzine.fr/](https://rzine.fr/){target="_blank"}         
 **ElementR** - Groupe d'utilisateurs pour le traitement de l'information Géographique avec R : [https://elementr.netlify.app/](https://elementr.netlify.app/){target="_blank"} 
 
+\
 
-### Livres :
+#### Livres :
 
 **Spatial Data Science** : [https://r-spatial.org/book/](https://r-spatial.org/book/*){target="_blank"}     
 **Geocomputation avec R** (original) : [https://r.geocompx.org/](https://r.geocompx.org/){target="_blank"}         
 **Geocomputation avec R** (traduction fr) : [https://r.geocompx.org/fr/](https://r.geocompx.org/fr/){target="_blank"}         
 **Spatial Data Science with R** : [https://rspatial.org/index.html](https://rspatial.org/index.html){target="_blank"}     
 
+\
 
-### Supports de formation :
+#### Supports de formation :
 
 **Cartographie thématique avec Magrit** : [https://github.com/magrit-formations](https://github.com/magrit-formations){target="_blank"}        
 **Représentation graphique avec R**  : [https://huguespecout.github.io/SO_MATE_2023/](https://huguespecout.github.io/SO_MATE_2023/){target="_blank"}        
