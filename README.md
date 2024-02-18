@@ -48,6 +48,27 @@ Packages nécessaires :
     install.packages("osmdata")
     install.packages("units")
     install.packages("tidygeocoder")
+    
+    
+    
+</br>
+
+
+Données utilisées :
+
+- **Couches vectorielles sur le Sénégal** (Régions, département, routes...) : [**GeoSenegal.gpkg**](https://github.com/HuguesPecout/GeoExo_Carto_R/tree/main/data/GeoSenegal.gpkg)    
+
+:::{.p_xsm}
+Source : [Géo Sénégal](https://www.geosenegal.gouv.sn/), 2024
+:::
+
+
+- **Statistiques démographiques par région, de 2015 à 2024** : [**Population_2015_2024.csv**](https://github.com/HuguesPecout/GeoExo_Carto_R/tree/main/data/Population_2015_2024.csv)   
+
+:::{.p_xsm}
+Source : [Agence nationale de la statistique et de la démographie](https://www.ansd.sn/){target="_blank"}, 2024
+:::
+
 
 </br>
 
